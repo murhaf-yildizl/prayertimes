@@ -1,15 +1,9 @@
-
 import 'package:flutter/material.dart';
 
-  interface class HomeInterface
-{
+interface class HomeInterface{
+
+  createPage(Widget page,IconData iconData,String bottomLable) {
 
 
-  createPage(Widget page,IconData iconData,String bottomLable)
-  {
-
-  }
-
-
-
+ }
 }

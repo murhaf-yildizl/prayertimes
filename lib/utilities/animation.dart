@@ -114,7 +114,7 @@ class TransformAnimation{
 
   static Scale(Widget child)
   {
-    return Transform.scale(scale:3 ,child:child,origin: Offset(0,0),);
+    return Transform.scale(scale:1 ,child:child,origin: Offset(1,1),);
   }
 
   static translate(Widget child)
@@ -124,7 +124,7 @@ class TransformAnimation{
 
   static rotate(Widget child)
   {
-    return Transform.rotate(angle: 45,origin:Offset(12,0),child:child);
+    return Transform.rotate(angle: 360,origin:Offset(0,0),child:child);
   }
 
   static matrix(Widget child)
@@ -138,8 +138,8 @@ class AnimatedContainer_An{
   static animatedContainer(Widget child)
   {
     return AnimatedContainer(
-     // color: Colors.red,
-      ///curve: Curves.easeInBack,
+      color: Colors.red,
+      curve: Curves.easeInBack,
       onEnd: (){
 
       },

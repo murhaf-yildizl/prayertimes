@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prayertimes1/controller/prayer_controller.dart';
 import 'package:prayertimes1/model/prayer.dart';
+import 'package:prayertimes1/utilities/device_dimensions.dart';
 import 'package:prayertimes1/utilities/time_utility.dart';
+import 'package:prayertimes1/view/home.dart';
 import '../main.dart';
 import '../notification/local_notifications.dart';
 
@@ -33,10 +35,10 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
     super.initState();
 
     _controller = AnimationController(vsync: this, duration: Duration(seconds: 20))..repeat(reverse: true);
-     notif_iconColor=List.generate(6, (index) => false);
-      timer=Timer.periodic(Duration(seconds: 1), (Timer t) {
-        startCounter(t);
-      });
+
+    notif_iconColor=List.generate(6, (index) => index!=1?true:false);
+
+
 
     _rowController = AnimationController(
       duration: const Duration(seconds: 1),
@@ -53,16 +55,21 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
   void dispose() {
     // TODO: implement dispose
 
+    super.dispose();
     _controller.dispose();
     _rowController.dispose();
     timer.cancel();
-    super.dispose();
+
+
 
   }
 
   @override
   Widget build(BuildContext context) {
-    print("***************************");
+
+    timer=Timer.periodic(Duration(seconds: 1), (Timer t) {
+      startCounter(t);
+    });
 
      return Scaffold(
           body: GetBuilder<PrayerController>(
@@ -90,7 +97,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
   {
     return  Center(
         child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(
                       "assets/images/ishaa.png",
@@ -104,7 +111,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
                         end: Offset(0,0.4)
                     ).animate(_controller),
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration:const  BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage("assets/images/mosque2.jpg"),
                               fit: BoxFit.fill
@@ -119,16 +126,17 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
                           Container(
                             padding: EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.7),
+                              color: Colors.green.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(30),
                             ),
-                              child: Text("  حان الآن وقت صلاة ${remainingTime['name']}",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold,color:Colors.white,fontFamily: 'lateef'),)),
+                              child: Text("  حان الآن وقت صلاة ${remainingTime['name']}",style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white,fontWeight: FontWeight.bold),)),
                            Spacer(),
                            IconButton(
                                onPressed: (){
                                  setState(() {
                                    stoped=true;
                                  });
+                                 Get.to(Home());
                                },
                                icon: Icon(Icons.stop_circle_outlined,size: 50,color: Colors.red,)
 
@@ -145,7 +153,8 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
 
   Widget drawRow(PrayerModel prayer,int index) {
 
-    bool notified=pref.getBool(prayer.name)??false;
+    bool notified=pref.getBool("${prayer.name!}_notify")??false;
+
      if(notified==true)
         notif_iconColor[index]=true;
   else  notif_iconColor[index]=false;
@@ -156,14 +165,15 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
       child: ScaleTransition(
         scale: _rowController,
         child: Container(
+          height: screen_height*0.10,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
-    gradient: LinearGradient(
+    gradient: const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.blueAccent,
-                  Colors.white
+                  Colors.grey
                 ]
             )
           ),
@@ -171,7 +181,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
            Container(
-             width:60,
+             width:screen_width*0.20,
              child: Center(
                child: IconButton(
                     onPressed:(){
@@ -182,14 +192,14 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
                      if(notified==false)
                      {
                        notif_iconColor[index]=true;
-                       pref.setBool(prayer.name, true);
-                       NotificationService().createNotification(id:index,title: "تنبيه االصلاة",body: "${prayer.name} صلاة",hour: prayer.time.hour, minites: prayer.time.minute,zoneOffset: prayer.zone.timeZoneOffset.inHours);
+                       pref.setBool("${prayer.name!}_notify", true);
+                       NotificationService().createNotification(id:index,title: "تنبيه االصلاة",body: "${prayer.name} صلاة",hour: prayer.time!.hour, minites: prayer.time!.minute,zoneOffset: prayer.zone!.timeZoneOffset!.inHours);
 
                      }
                      else
                      {
                        notif_iconColor[index]=false;
-                       pref.setBool(prayer.name, false);
+                       pref.setBool("${prayer.name!}_notify", false);
                        NotificationService().cancelNotifications(id:index);
 
                      }
@@ -197,16 +207,16 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
                    });
 
                     },
-                    icon: Icon(Icons.add_alert,size: 35,color:notif_iconColor[index]==true?Colors.orange:Colors.grey,),
+                    icon: Icon(Icons.add_alert,size: icon_size,color:notif_iconColor[index]==true?Colors.orange:Colors.grey,),
                 ) ,
              ),
            ),
            Container(
-               width:60,
-               child: Center(child: Text("${prayer.time.hour}:${prayer.time.minute}",style: TextStyle(fontSize: 18,color: Colors.indigo,),)))  ,
+               width:screen_width*0.30,
+               child: Center(child: Text("${prayer.time!.hour}:${prayer.time!.minute.toString().padLeft(2,'0')}",style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.indigo),)))  ,
            Container(
-               width:60,
-               child: Center(child: Text("${prayer.name}",style: TextStyle(fontSize: 18,color: Colors.indigo),)))
+               width:screen_width*0.40,
+               child: Center(child: Text("${prayer.name}",style:Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.indigo),)))
 
           ],
           ),
@@ -218,13 +228,13 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
   Widget drawRemainingTime(List<PrayerModel> prayer_times) {
 
     return Container(
-      height: 150,
+      height: screen_height*0.20,
       padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(250)
       ),
       child: Card(
-             margin:EdgeInsets.symmetric(vertical: 12) ,
+             margin:EdgeInsets.symmetric(vertical: 10) ,
             color:Colors.transparent,
             child: Center(
                 child: ListenableBuilder(
@@ -235,10 +245,13 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
                    mainAxisAlignment:MainAxisAlignment.center,
                    crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
-                     timerFinished? Text("حان الآن وقت صلاة ${remainingTime['name']}",style: TextStyle(color: Colors.white,fontSize:18,fontWeight: FontWeight.bold))
-                         :Text(": "+"صلاة  ${remainingTime['name']??''} بعد ",style: TextStyle(color: Colors.white,fontSize:24,fontWeight: FontWeight.bold,fontFamily: 'lateef')),
-                    SizedBox(height: 10,),
-                     timerFinished?Text(''):Text(timerNotifier.value,style: TextStyle(color: Colors.amberAccent,fontSize:24,fontWeight: FontWeight.bold)),
+                     timerFinished? Text("حان الآن وقت صلاة ${remainingTime['name']}",style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white,fontWeight: FontWeight.bold))
+                         :remainingTime['index']==1?  Text(": "+" ${remainingTime['name']??''} بعد ",style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white,fontWeight: FontWeight.bold))
+                         :Text(": "+"صلاة  ${remainingTime['name']??''} بعد ",style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white,fontWeight: FontWeight.bold)),
+
+                     SizedBox(height: 10,),
+
+                     timerFinished?Text(''):Text(timerNotifier.value,style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.amberAccent,fontWeight: FontWeight.bold)),
                    ],
                  );
 
@@ -275,7 +288,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
   drawTimes(List<PrayerModel> prayer_times) {
     return Container(
         height: Get.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/mosque12.jpg"),
                 fit:BoxFit.cover
@@ -283,14 +296,15 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
         ),
         child:  SingleChildScrollView(
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
 
-                SizedBox(height:Get.height*0.15),
+                //SizedBox(height:screen_height*0.09),
 
                 for(int i=0;i<prayer_times.length+1;i++)
-                  i==0? drawRemainingTime(prayer_times): drawRow(prayer_times[i-1],i-1)
+                  i==0? drawRemainingTime(prayer_times): drawRow(prayer_times[i-1],i-1),
+                SizedBox(height: screen_height*0.10,)
               ]
           ),
         )
@@ -310,6 +324,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
                Future.delayed(Duration(minutes: 1),(){
                  setState(() {
                           timerFinished=false;
+                          stoped=true;
                           timer=Timer.periodic(Duration(seconds: 1), (Timer t) {
                             startCounter(t);
                           });

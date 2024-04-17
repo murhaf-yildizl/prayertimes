@@ -1,18 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import '../model/zone.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class ZoneController {
    CurrentZone? zone;
 
  Future<CurrentZone?> initiateZone()async
   {
-    Position? _location=await getCurrentLocation();
 
-    if(_location!=null)
+    Position? _location=await getCurrentLocation();
+     if(_location!=null)
     {
-print("%%%%%%%%%% ${_location.longitude}  ${_location.latitude}");
       List<Placemark> placemarks = await placemarkFromCoordinates(
           _location.latitude,
           _location.longitude
@@ -20,15 +20,17 @@ print("%%%%%%%%%% ${_location.longitude}  ${_location.latitude}");
 
       if(placemarks.length>0)
         {
+
+
           final placemark=placemarks.first;
+
           final timeZoneOffset=DateTime.now().timeZoneOffset.inHours;
-              print("ZONE ${DateTime.now().timeZoneOffset.inMinutes}");
-          zone=CurrentZone(position: _location, placemark: placemark, timeZoneOffset: Duration(minutes:timeZoneOffset),currenttTime:DateTime.now());
+          zone=CurrentZone(position: _location, placemark: placemark, timeZoneOffset: Duration(minutes:timeZoneOffset),currentTime:DateTime.now());
 
         }
 
     }
-    return zone;
+     return zone;
 
 
 
@@ -44,6 +46,7 @@ print("%%%%%%%%%% ${_location.longitude}  ${_location.latitude}");
 
 
     } catch (e) {
+      Get.snackbar("error", e.toString());
       print("Error: $e");
     }
 

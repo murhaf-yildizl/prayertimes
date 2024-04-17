@@ -5,5 +5,5 @@ List<String> urls=[
   "assets/images/asir.png",
   "assets/images/sunset.png",
   "assets/images/ishaa.png",
-  "assets/images/mosque.jpg",
+  "assets/images/mosque12.jpg",
 ];

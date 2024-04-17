@@ -2,7 +2,7 @@ import 'package:prayertimes1/model/prayer.dart';
 
 Map<String,dynamic> calculateNearestTime(List<PrayerModel> prayer_times)
 {
- List<DateTime>  times    = List<DateTime>.generate(prayer_times.length, (index) => prayer_times[index].time);
+ List<DateTime>  times    = List<DateTime>.generate(prayer_times.length, (index) => prayer_times[index].time!);
 
  List<Duration> deferences = times.map((tm) =>tm.difference(DateTime.now()).abs()).toList();
 print("DEFER ${deferences}");
@@ -10,7 +10,7 @@ print("DEFER ${deferences}");
   
  Duration remainingTime=times[nearestIndex].difference(DateTime.now());
 
- if(remainingTime.inMinutes<-2 )
+ if(remainingTime.inMinutes<-1 )
   {
    if(++nearestIndex>5)
      {

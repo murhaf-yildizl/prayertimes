@@ -1,7 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:prayertimes1/utilities/device_dimensions.dart';
 
 class SingleAzkar extends StatelessWidget {
   Map<String,dynamic> map={};
@@ -13,8 +12,8 @@ class SingleAzkar extends StatelessWidget {
     print(map.values.first.length);
       return Scaffold(
         body: Container(
-          height: Get.height,
-           decoration: BoxDecoration(
+          height:screen_height,
+           decoration: const BoxDecoration(
              image: DecorationImage(
                image: AssetImage("assets/images/mosque11.jpg"),
                fit: BoxFit.cover
@@ -26,25 +25,24 @@ class SingleAzkar extends StatelessWidget {
               {
                 if(index==0)
                      return iconButton();
-                else return drawItems(map.values.first[index-1]);
+                else return drawItems(map.values.first[index-1],context);
               },
            ),
         ),
       );
   }
 
-  Widget drawItems(item) {
+  Widget drawItems(item,BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Card(
-          color: Colors.indigo,
-          elevation: 3,
+           elevation: 3,
           child: Center(child:
             Padding(
               padding: const EdgeInsets.all(14),
-              child: Text(item,style: TextStyle(fontFamily:'lateef',fontSize: 24,color: Colors.white,letterSpacing:1,wordSpacing: 1,height: 2),),
+              child: Text(item,style:Theme.of(context).textTheme.titleMedium,),
             )
             ,),
         ),
@@ -57,7 +55,7 @@ class SingleAzkar extends StatelessWidget {
         onPressed: (){
           Navigator.pop(Get.context!);
         },
-        icon:Icon(Icons.arrow_back_ios,color: Colors.red,size: 40,)
+        icon:Icon(Icons.arrow_back_ios,color: Colors.red,size: icon_size,)
     );
   }
 }

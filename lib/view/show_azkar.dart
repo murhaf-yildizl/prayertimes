@@ -79,8 +79,7 @@ class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget> with Si
   }
 
   Widget drawCard(int index) {
-    print(azkar[index]);
-    print("_________$index");
+
     return  ScaleTransition(
       scale: _animation,
       child: InkWell(
@@ -91,17 +90,16 @@ class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget> with Si
           height: 20,
           width: 20,
           decoration: BoxDecoration(
-            color: Colors.brown.withOpacity(0.9),
+            color: Colors.brown.withOpacity(0.7),
             borderRadius: BorderRadius.circular(30)
           ),
           child: Center(
             child: Text(
               '${azkar[index].keys.first}',
-              style: TextStyle(fontSize: 24.0,fontFamily: 'lateef',color: Colors.amberAccent),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white)),
             ),
           ),
         ),
-      ),
     );
   }
 
@@ -110,10 +108,10 @@ class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget> with Si
       height: Get.height*0.08,
       width:  Get.width*0.90,
       decoration: BoxDecoration(
-        color: Colors.indigo.withOpacity(0.7),
+        color: Colors.indigo,
         borderRadius: BorderRadius.circular(30)
       ),
-      child: Center(child: Text("فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ",style: TextStyle(fontSize: 24.0,fontFamily: 'lateef',color: Colors.white))),
+      child: Center(child: Text("فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ",style:Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white))),
     );
  }
 }

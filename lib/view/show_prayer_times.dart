@@ -1,9 +1,11 @@
+import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:prayertimes1/controller/prayer_controller.dart';
 import 'package:prayertimes1/model/prayer.dart';
+import 'package:prayertimes1/utilities/device_dimensions.dart';
 import 'package:prayertimes1/utilities/image_urls.dart';
 
 class PrayerTime extends StatefulWidget {
@@ -15,7 +17,7 @@ class _PrayerTimeState extends State<PrayerTime> {
 
   String selectedPrayerTime = 'Fajr'; // Default selected prayer time
   int currentPageIndex = 0; // Current page index
-  int h=-1;
+  //int h=-1;
 
    PageController pageController=PageController(
      initialPage: 0,
@@ -24,18 +26,16 @@ class _PrayerTimeState extends State<PrayerTime> {
 @override
   void initState() {
     // TODO: implement initState
-
   super.initState();
-
 
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
        body:GetBuilder<PrayerController>(
-          builder: (controller)
+           builder: (controller)
           {
-            if(controller.prayer_times.isNotEmpty) {
+             if(controller.prayer_times.isNotEmpty) {
 
                  return  drawConents(controller.prayer_times);
 
@@ -56,45 +56,18 @@ class _PrayerTimeState extends State<PrayerTime> {
                      height: double.infinity,
                      width: double.infinity,
                      child: Image.asset(urls[6],fit: BoxFit.cover,)),
-                 // Container(
-                 //   width: double.infinity,
-                 //   height: double.infinity,
-                 //   decoration: BoxDecoration(
-                 //       gradient: LinearGradient(
-                 //           begin: Alignment.topCenter,
-                 //           end: Alignment.bottomCenter,
-                 //           colors: [
-                 //             Colors.transparent,
-                 //             Colors.white
-                 //           ]
-                 //       )
-                 //   ),
-                 //   child:   Container(
-                 //     width: double.infinity,
-                 //     height: double.infinity,
-                 //     decoration: BoxDecoration(
-                 //         gradient: LinearGradient(
-                 //             begin: Alignment.topCenter,
-                 //             end: Alignment.bottomCenter,
-                 //             colors: [
-                 //               Colors.transparent,
-                 //               Colors.white
-                 //             ]
-                 //         )
-                 //     ),
-                 //   )
-                 //   ,
-                 // ),
+
                  Container(
-                 padding: const EdgeInsets.symmetric(vertical: 8,horizontal:8),
-                 child: ListView(
-                   shrinkWrap: true,
-                   children: [
-                     const SizedBox(height: 30,),
-                     drawLocation(prayer_times.first.zone.placemark),
-                     SizedBox(height: 150,),
-                     drawTimes(prayer_times)
+                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal:8),
+                 child: SingleChildScrollView(
+                   child: Column(
+                     children: [
+                       //const SizedBox(height: 10,),
+                       drawLocation(prayer_times.first.zone!.placemark!),
+                       //SizedBox(height: 50,),
+                       drawTimes(prayer_times)
     ],
+                   ),
                  ),
 
            ),
@@ -128,8 +101,8 @@ class _PrayerTimeState extends State<PrayerTime> {
   Widget  drawTimes(List<PrayerModel> prayer_times) {
     return  SizedBox(
         height: Get.height*0.90,
-        child: PageView.builder(
-          padEnds: false,
+         child: PageView.builder(
+            padEnds: false,
             scrollDirection: Axis.vertical,
             controller: pageController,
             itemBuilder: (context, i) {
@@ -150,26 +123,38 @@ class _PrayerTimeState extends State<PrayerTime> {
 
 Widget drawPages(int i, List<PrayerModel> prayer_times) {
 
-    if(h>=prayer_times.length)
-       h=-1;
+;
 
-    h++;
-
-  return Container(
-
-    child: Directionality(
+  return Directionality(
 
       textDirection:i!=currentPageIndex?TextDirection.rtl:TextDirection.ltr,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          i==currentPageIndex?
-         drawPrayerImage(i,prayer_times):Text(''),
-         drawPrayerName(i,prayer_times),
+      child:
 
-        ],
-      ),
-    ),
+      Padding(
+        padding: const EdgeInsets.only(bottom:12.0),
+        child: Container(
+         // color: Colors.red,
+
+          //height:i!=currentPageIndex?200:1000,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              i==currentPageIndex?
+             drawPrayerImage(i,prayer_times):Text(""),
+             Container(
+
+               height:screen_height*0.15,
+               padding: EdgeInsets.all(12),
+                 decoration: BoxDecoration(
+                   borderRadius: BorderRadius.circular(30),
+                   color:i==currentPageIndex? Colors.red.withOpacity(0.3):Colors.transparent
+                 ),
+                 child: drawPrayerName(i,prayer_times)),
+
+          ]
+          ),
+        ),
+      )
   );
 
   }
@@ -178,8 +163,8 @@ Widget drawPages(int i, List<PrayerModel> prayer_times) {
     return AnimatedContainer(
         duration: const Duration(seconds: 2),
         curve: Curves.easeInOut,
-        width: 200.0,
-        height: 200.0,
+        width:screen_width*0.40,
+        height: screen_width*0.40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: Colors.grey, width: 3.0),
@@ -199,21 +184,21 @@ Widget drawPages(int i, List<PrayerModel> prayer_times) {
       padding: const EdgeInsets.all(10),
       child: i==currentPageIndex?
       Container(
-        width: 150,
-        height: 120,
+        width: screen_width*0.40,
+        height: screen_height*0.10,
         color:Colors.transparent,
         child: Center(
           child: RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
 
-                style: TextStyle(color: Colors.white,fontFamily: 'lateef',fontWeight: FontWeight.bold,fontSize: 32,letterSpacing: 2,height:1.5),
+                style:  Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white,fontWeight: FontWeight.bold),
                 children:
                 [
                   TextSpan(text:"${prayer_times[i%prayer_times.length].name}"),
                   TextSpan(text: "\n"),
-                  TextSpan(text:"${prayer_times[i% prayer_times.length].time.hour}:"
-                      "${prayer_times[i% prayer_times.length].time.minute}" )
+                  TextSpan(text:"${prayer_times[i% prayer_times.length].time!.hour}:"
+                      "${prayer_times[i% prayer_times.length].time!.minute.toString().padLeft(2,'0')}" )
                 ]
             ),
 
@@ -221,16 +206,16 @@ Widget drawPages(int i, List<PrayerModel> prayer_times) {
         ),
       ):
       Container(
-        child: RichText(
+         child: RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
 
-              style: TextStyle(color: Colors.white,fontFamily: 'lateef',fontWeight: FontWeight.normal,fontSize: 24,letterSpacing: 2,height:1),
+              style:Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
               children:
           [
             TextSpan(text:"${prayer_times[i% prayer_times.length].name}"),
-            TextSpan(text:" ${prayer_times[i% prayer_times.length].time.hour}:"
-                "${prayer_times[i% prayer_times.length].time.minute}" )
+            TextSpan(text:" ${prayer_times[i% prayer_times.length].time!.hour}:"
+                "${prayer_times[i% prayer_times.length].time!.minute.toString().padLeft(2,"0")}" )
           ]
           ),
 
@@ -240,6 +225,7 @@ Widget drawPages(int i, List<PrayerModel> prayer_times) {
 
   );
  }
+
 
 
 }

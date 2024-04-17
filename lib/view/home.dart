@@ -1,9 +1,12 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:prayertimes1/utilities/device_dimensions.dart';
+import 'package:prayertimes1/utilities/widgets/drawer.dart';
+import 'package:prayertimes1/view/compass.dart';
 import 'package:prayertimes1/view/home_interface.dart';
 import 'package:prayertimes1/view/show_azkar.dart';
+import 'package:prayertimes1/view/show_date.dart';
 import 'package:prayertimes1/view/show_prayer_times.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'show_prayer_notifications.dart';
 
 
@@ -36,7 +39,7 @@ class _HomeState extends State<Home> implements HomeInterface{
   Widget build(BuildContext context) {
     return    Scaffold(
      key: _key,
-     endDrawer: drawer(),
+     endDrawer: CustomDrawer(),
       body: PageView(
         controller: _pageController,
         children: _screens,
@@ -54,28 +57,31 @@ class _HomeState extends State<Home> implements HomeInterface{
         index:currentPage ,
         onTap: (index){
 
-          if(index==_screens.length)
-            _key.currentState!.openEndDrawer();
-         else {
-            setState(() {
-            currentPage = index;
-            bottomPressed=true;
+             if(index==_screens.length)
+             {
+                 _key.currentState!.openEndDrawer();
+              }
 
-            _pageController.animateToPage(
-              currentPage,
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.easeInOut,
-            );
-          });
-          }
+            else {
+              setState(() {
+              currentPage = index;
+              bottomPressed=true;
 
-        },
-        //height:75 ,
-        backgroundColor: Colors.transparent,
-        color: Colors.indigo,
-        items:List.generate(_screens.length+1, (index) =>getItems(index)),
+              _pageController.animateToPage(
+                currentPage,
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeInOut,
+              );
+            });
+            }
 
-      )
+          },
+          //height:screen_height*0.20,
+          backgroundColor: Colors.transparent,
+          color: Color.fromRGBO(1, 110, 110, 0.8),
+          items:List.generate(_screens.length+1, (index) =>getItems(index)),
+
+        ),
 
     );
 
@@ -84,67 +90,39 @@ class _HomeState extends State<Home> implements HomeInterface{
   @override
   void dispose() {
     // TODO: implement dispose
+    super.dispose();
+
     _pageController.dispose();
-     super.dispose();
 
 
    }
 
-  Widget drawer() {
-    return Container(
-      padding:EdgeInsets.only(top: 50,bottom: 100) ,
-      margin: EdgeInsets.all(10),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Drawer(
-          child: ListView(
-            children: const [
-              ListTile(
-                leading: Text("أذكار الصباح والمساء"),
-                trailing:Icon(Icons.bookmark_added_outlined) ,
-              ),
-              ListTile(
-                leading:Text("الأدعية المأثورة"),
-                trailing:Icon(Icons.mosque_outlined) ,
-              ),
-              ListTile(
-                leading:Text("الإعدادات"),
-                trailing:Icon(Icons.settings) ,
-              ),
-
-
-
-
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-
 Widget getItems(int index) {
 
       bool selected=currentPage==index||index==_screens.length;
-      return  Container(
-      height: !selected?70:40,
-      width:  !selected?70:40,
-      child: Column(
-        mainAxisAlignment: !selected? MainAxisAlignment.end: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-        Icon(
-           _icons[index],
-            color: Colors.white,
-            size: 30
+      return  Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          constraints: BoxConstraints(
+          //minHeight: 200,
+           ),
+         //height:600, //!selected?250:250,
+        //width: 300,// !selected?250:250,
+        child: Column(
+          mainAxisAlignment: !selected? MainAxisAlignment.end: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+          Icon(
+             _icons[index],
+              color: Colors.white,
+              size: icon_size,
+          ),
+            // SizedBox(height: 5),
+            //!selected?Expanded(child: Text(_lables[index],style:Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.white),)):SizedBox(height: 0,),
+        ]
         ),
-        //SizedBox(height: 5),
-          !selected?Text(_lables[index],style: TextStyle(color: Colors.white),):SizedBox(height: 0,),
-      ]
-      ),
-    );
+            ),
+      );
  }
 
   void initilizeItems() {
@@ -153,7 +131,10 @@ Widget getItems(int index) {
      items.add(createPage(PrayerTime(), Icons.mosque_outlined,"أوقات الصلاة"));
      items.add(createPage(CurrentPrayer(), Icons.add_alert_sharp, "التنبيهات"));
      items.add(createPage(ShowAzkar(), Icons.note_alt_outlined, "الأذكار"));
+     items.add(createPage(Compass(), Icons.compass_calibration_outlined, "البوصلة"));
+     items.add(createPage(ShowDate(), Icons.calendar_today, "التاريخ"));
      items.add(createPage(Text(''), Icons.menu, "القائمة"));
+
 
     _screens= List.generate(items.length-1, (index) => items[index][0]);
     _icons  = List.generate(items.length, (index) => items[index][1]);
@@ -162,12 +143,13 @@ Widget getItems(int index) {
   }
 
 
+
   @override
-  List<dynamic> createPage(Widget page,IconData iconData,String bottomLable) {
+  List<dynamic>createPage(Widget page, IconData iconData, String bottomLable) {
     // TODO: implement createPage
     return [page,iconData,bottomLable];
-
     throw UnimplementedError();
   }
+
 }
 

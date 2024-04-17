@@ -1,9 +1,8 @@
 import 'package:adhan/adhan.dart';
 
-enum prayerTimesp {
-  fajr,sunrise,duhur,asir,magrib,isha
-}
+List<String> prayer_names=["الفجر","الشروق","الظهر","العصر","المغرب","العشاء"];
 
+//enum prayer_enum{الفجر,sunrise,duhur,asir,magrib,isha}
 
 Madhab madhab=Madhab.shafi;
 CalculationMethod method=CalculationMethod.turkey;

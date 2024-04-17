@@ -41,10 +41,21 @@ dependencies:
   flutter_local_notifications:
   geolocator:
   geocoding:
-  awesome_notifications: ^0.8.2
   shared_preferences:
   curved_navigation_bar:
- 
+  workmanager:
+  flutter_compass:
+  flutter_svg:
+  permission_handler:
+  duration:
+  connectivity:
+  flutter_qiblah:
+  hijri:
+  lottie:
+  audioplayers: ^5.2.1
+  appinio_video_player: ^1.2.2
+  marquee:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -81,9 +92,43 @@ flutter:
     - assets/images/mosque11.jpg
     - assets/images/mosque12.jpg
     - assets/images/azkaricon.png
+    - assets/images/books.png
+    - assets/images/quran-icon.png
+    - assets/images/ahadith.png
+    - assets/images/settings.png
     - assets/images/notificationicon.jpg
     - assets/images/prayertimes.png
+    - assets/images/drawer.png
     - assets/images/taha.jpeg
+    - assets/SVG/compass.svg
+    - assets/SVG/needle.svg
+    - assets/sounds/azan1.mp3
+    - assets/images/adha.png
+    - assets/images/fitir.jpg
+    - assets/images/ramadan.jpg
+    - assets/images/qiblah.png
+    - assets/images/date.jpg
+    - assets/images/hijri.png
+    - assets/images/lottie1.json
+    - assets/images/splash.png
+    - assets/images/appbar.png
+
+    #sunds
+    - assets/sounds/azan1.mp3
+    - assets/sounds/azan2.mp3
+    - assets/sounds/azan3.mp3
+    - assets/sounds/azan4.mp3
+
+    #quraan
+    - assets/quraan/quraan1.mp3
+    - assets/quraan/quraan2.mp3
+    - assets/quraan/quraan3.mp3
+    - assets/quraan/quraan4.mp3
+    - assets/quraan/quraan5.mp3
+
+
+
+
 
 
   fonts:
