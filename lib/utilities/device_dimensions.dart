@@ -34,17 +34,17 @@ deviceDemensions(BuildContext context) {
     medium_text=18;
     small_text=16;
     button_height=90;
-    icon_size=30;
+    icon_size=45;
 
   } //return ScreenSize.Large;
 
   else if (screen_height >=800)
   {
-    large_text= 18;
-    medium_text=16;
-    small_text=12;
+    large_text= 22;
+    medium_text=20;
+    small_text=16;
     button_height=80;
-    icon_size=30;
+    icon_size=40;
    } //re
 
   else if (screen_height >=600)
@@ -53,7 +53,7 @@ deviceDemensions(BuildContext context) {
     medium_text=16;
     small_text=12;
     button_height=80;
-    icon_size=30;
+    icon_size=35;
    } //return ScreenSize.Normal;
   else
   {
@@ -61,7 +61,7 @@ deviceDemensions(BuildContext context) {
     medium_text=14;
     small_text=12;
     button_height=60;
-    icon_size=25;
+    icon_size=30;
 
   }
 

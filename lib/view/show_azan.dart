@@ -159,13 +159,13 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin{
                       Text("اختيار",style:Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white)),
                       Radio(
 
-                          activeColor: Colors.green,
+                          activeColor: Colors.red,
                           groupValue: selectedAzan,
                           value: soundList[index]['path']!,
                           onChanged: (value){
                             setState(() {
                               String? azan=value?.split("/")[1].split(".")[0];
-
+                             print("VALU $value");
                               if(azan!=null)
                               {
                                 pref.setString("azan",azan);
@@ -199,6 +199,23 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin{
       {'title':'الأذان بمقام الحجاز','subtitle':'الشيخ مصطفى العزاوي','path':'sounds/azan4.mp3'},
     ];
 
+
+    String azan=pref.getString("azan")??'azan4';
+    int index=0;
+
+    switch(azan)
+    {
+      case 'azan1':{ index=0; break;}
+      case 'azan2':{ index=1; break;}
+      case 'azan3':{ index=2; break;}
+      case 'azan4':{ index=3; break;}
+
+
+    }
+
+    selectedAzan= soundList[index]['path']!;
+
+    print("selected $selectedAzan");
     _animationIconController = AnimationController(
       vsync: this,
       duration:   Duration(milliseconds: 750),

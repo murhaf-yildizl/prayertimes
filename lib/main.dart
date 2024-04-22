@@ -29,7 +29,7 @@ void main()async {
 
 class MyApp extends StatelessWidget {
 
-    MyApp( {super.key});
+  MyApp( {super.key});
 
   // This widget is the root of your application.
   @override
@@ -37,41 +37,41 @@ class MyApp extends StatelessWidget {
     deviceDemensions(context);
 
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
+        SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
 
-      )
+        )
     );
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
 
-     Get.put(PrayerController());
-     Get.put(DateController());
+    Get.put(PrayerController());
+    Get.put(DateController());
 
-     Future.delayed(Duration(seconds: 3),(){
-       runApp(GetMaterialApp(
+    Future.delayed(Duration(seconds: 3),(){
+      runApp(GetMaterialApp(
 
-           debugShowCheckedModeBanner: false,
-           defaultTransition: Transition.leftToRightWithFade,
+          debugShowCheckedModeBanner: false,
+          defaultTransition: Transition.leftToRightWithFade,
 
-           title: 'Flutter Demo',
-           theme: arabicTheme(),
-           home:Home()
-       ));
-     });
+          title: 'Flutter Demo',
+          theme: arabicTheme(),
+          home:Home()
+      ));
+    });
     return splashScreen();
   }
 
- Widget splashScreen() {
+  Widget splashScreen() {
 
-    // dailyTask();
+     dailyTask();
 
     return Container(
       color: Colors.white,
       child: Center(child: Lottie.asset("assets/images/lottie1.json",height: Get.height*0.65,width: Get.width*0.65,)),
     );
 
- }
+  }
 }
 
 
@@ -94,7 +94,7 @@ void callbackDispatcher() {
     pref.setBool("daily", true);
 
 
-     PrayerController().initilization();
+    PrayerController().initilization();
 
     //}
     return Future.value(true);

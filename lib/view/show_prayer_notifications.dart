@@ -55,11 +55,11 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
   void dispose() {
     // TODO: implement dispose
 
-    super.dispose();
     _controller.dispose();
     _rowController.dispose();
     timer.cancel();
 
+    super.dispose();
 
 
   }
@@ -160,12 +160,12 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
   else  notif_iconColor[index]=false;
 
     return Card(
-      color: Colors.grey.shade200,
+      color: Colors.blueAccent.shade200,
       margin: EdgeInsets.all(10),
       child: ScaleTransition(
         scale: _rowController,
         child: Container(
-          height: screen_height*0.10,
+          height: screen_height*0.085,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
     gradient: const LinearGradient(
@@ -213,7 +213,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>  with TickerProviderState
            ),
            Container(
                width:screen_width*0.30,
-               child: Center(child: Text("${prayer.time!.hour}:${prayer.time!.minute.toString().padLeft(2,'0')}",style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.indigo),)))  ,
+               child: Center(child: Text("${prayer.time!.hour}:${prayer.time!.minute.toString().padLeft(2,'0')}",style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.indigo,),)))  ,
            Container(
                width:screen_width*0.40,
                child: Center(child: Text("${prayer.name}",style:Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.indigo),)))

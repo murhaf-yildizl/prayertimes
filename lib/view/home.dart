@@ -24,7 +24,7 @@ class _HomeState extends State<Home> implements HomeInterface{
   final GlobalKey <ScaffoldState> _key=GlobalKey<ScaffoldState>();
   final GlobalKey <CurvedNavigationBarState> _navigationKey=GlobalKey();
   List<Widget>   _screens=[];
-  List<IconData> _icons=[];
+  List<Image> _icons=[];
   List<String>   _lables=[];
 
   @override
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> implements HomeInterface{
 
   @override
   Widget build(BuildContext context) {
-    return    Scaffold(
+     return    Scaffold(
      key: _key,
      endDrawer: CustomDrawer(),
       body: PageView(
@@ -77,8 +77,8 @@ class _HomeState extends State<Home> implements HomeInterface{
 
           },
           //height:screen_height*0.20,
-          backgroundColor: Colors.transparent,
-          color: Color.fromRGBO(1, 110, 110, 0.8),
+          backgroundColor: Color.fromRGBO(9, 100, 140,0.4),
+          color: Color.fromRGBO(9, 100, 140,0.4),
           items:List.generate(_screens.length+1, (index) =>getItems(index)),
 
         ),
@@ -102,39 +102,19 @@ Widget getItems(int index) {
       bool selected=currentPage==index||index==_screens.length;
       return  Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          constraints: BoxConstraints(
-          //minHeight: 200,
-           ),
-         //height:600, //!selected?250:250,
-        //width: 300,// !selected?250:250,
-        child: Column(
-          mainAxisAlignment: !selected? MainAxisAlignment.end: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-          Icon(
-             _icons[index],
-              color: Colors.white,
-              size: icon_size,
-          ),
-            // SizedBox(height: 5),
-            //!selected?Expanded(child: Text(_lables[index],style:Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.white),)):SizedBox(height: 0,),
-        ]
-        ),
-            ),
+        child: _icons[index],
       );
  }
 
   void initilizeItems() {
      List<dynamic>items=[];
 
-     items.add(createPage(PrayerTime(), Icons.mosque_outlined,"أوقات الصلاة"));
-     items.add(createPage(CurrentPrayer(), Icons.add_alert_sharp, "التنبيهات"));
-     items.add(createPage(ShowAzkar(), Icons.note_alt_outlined, "الأذكار"));
-     items.add(createPage(Compass(), Icons.compass_calibration_outlined, "البوصلة"));
-     items.add(createPage(ShowDate(), Icons.calendar_today, "التاريخ"));
-     items.add(createPage(Text(''), Icons.menu, "القائمة"));
-
+     items.add(createPage(PrayerTime(),   Image.asset("assets/icons/times.png",height:  icon_size,width:icon_size,fit: BoxFit.fill,),"أوقات الصلاة"));
+     items.add(createPage(CurrentPrayer(),Image.asset("assets/icons/alarm.png",height:  icon_size,width:icon_size,fit: BoxFit.fill), "التنبيهات"));
+     items.add(createPage(ShowAzkar(),    Image.asset("assets/icons/azkar.png",height:  icon_size,width:icon_size,fit: BoxFit.fill), "الأذكار"));
+     items.add(createPage(Compass(),      Image.asset("assets/icons/compass.png",height:icon_size,width:icon_size,fit: BoxFit.fill), "البوصلة"));
+     items.add(createPage(ShowDate(),     Image.asset("assets/icons/date.png",height:   icon_size,width:icon_size,fit: BoxFit.fill), "التاريخ"));
+     items.add(createPage(Text(''),       Image.asset("assets/icons/menu.png",height:   icon_size,width:icon_size,fit: BoxFit.fill), "القائمة"));
 
     _screens= List.generate(items.length-1, (index) => items[index][0]);
     _icons  = List.generate(items.length, (index) => items[index][1]);
@@ -145,11 +125,12 @@ Widget getItems(int index) {
 
 
   @override
-  List<dynamic>createPage(Widget page, IconData iconData, String bottomLable) {
+  List<dynamic>createPage(Widget page, Image iconData, String bottomLable) {
     // TODO: implement createPage
     return [page,iconData,bottomLable];
     throw UnimplementedError();
   }
 
 }
+
 

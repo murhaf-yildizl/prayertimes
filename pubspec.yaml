@@ -38,7 +38,7 @@ dependencies:
   adhan:
   get:
   intl:
-  flutter_local_notifications:
+  flutter_local_notifications: 14.0.1
   geolocator:
   geocoding:
   shared_preferences:
@@ -112,6 +112,12 @@ flutter:
     - assets/images/lottie1.json
     - assets/images/splash.png
     - assets/images/appbar.png
+    - assets/icons/alarm.png
+    - assets/icons/azkar.png
+    - assets/icons/date.png
+    - assets/icons/times.png
+    - assets/icons/compass.png
+    - assets/icons/menu.png
 
     #sunds
     - assets/sounds/azan1.mp3

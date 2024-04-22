@@ -25,8 +25,7 @@ class PrayerController extends GetxController
 
        final allPrayerTimes =  PrayerTimes.today(
           Coordinates(_zone!.position!.latitude,_zone!.position!.longitude),
-       //    DateTime.now(),
-           params.getParameters(),
+            params.getParameters(),
            //CalculationMethod.Turkey(),
       );
        //Get.snackbar("titlefffffff"," ${allPrayerTimes.fajr!.hour}").show();
@@ -54,8 +53,7 @@ class PrayerController extends GetxController
           name: prayer_names[2],
           time: allPrayerTimes.dhuhr
       ));
-//////////////////////////
-      prayer_times.add(PrayerModel
+       prayer_times.add(PrayerModel
         (
           zone: _zone!,
           name: prayer_names[3],
@@ -81,33 +79,30 @@ class PrayerController extends GetxController
       int index=0;
        NotificationService().cancelNotifications();
 
-       // prayer_times.forEach((pr) {
-       //
-       //   pref.setString(pr.name!,jsonEncode(pr.toJson()));
-       //
-       //   if(index!=1)
-       //    {
-       //     bool? notify= pref.getBool("${pr.name!}_notify");
-       //
-       //     if(notify==null)
-       //       pref.setBool("${pr.name!}_notify", true);
-       //
-       //     NotificationService().createNotification(id:index,title: "تنبيه االصلاة",body: "${pr.name} صلاة",hour: pr.time!.hour, minites: pr.time!.minute,zoneOffset:_zone!.timeZoneOffset!.inHours );
-       //
-       //
-       //     }
-       //
-       //   index++;
-       // });
+       prayer_times.forEach((pr) {
 
-       print("MMMMMMMMMMMMMMMMMMMMMMMMMMMM");
-         //NotificationService().cancelNotifications();
-       NotificationService().createNotification(id:99,title:"99 title",body:"1009 body",hour:0, minites: 25,zoneOffset: _zone!.timeZoneOffset!.inHours);
-       print("MMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+         pref.setString(pr.name!,jsonEncode(pr.toJson()));
 
-       NotificationService().createNotification(id:88,title:"88 title",body:"2007 body",hour: 0,minites:  30,zoneOffset: _zone!.timeZoneOffset!.inHours);
+         if(index!=1)
+          {
+           bool? notify= pref.getBool("${pr.name!}_notify");
+
+           if(notify==null)
+             pref.setBool("${pr.name!}_notify", true);
+
+           NotificationService().createNotification(id:index,title: "تنبيه االصلاة",body: "${pr.name} صلاة",hour: pr.time!.hour, minites: pr.time!.minute,zoneOffset:_zone!.timeZoneOffset!.inHours );
+
+
+           }
+
+         index++;
+       });
+
+          //NotificationService().cancelNotifications();
+       //NotificationService().createNotification(id:9890,title:"99 title",body:"1009 body",hour:01, minites: 12,zoneOffset: _zone!.timeZoneOffset!.inHours);
+
+       //NotificationService().createNotification(id:88,title:"88 title",body:"2007 body",hour:23,minites:  47,zoneOffset: _zone!.timeZoneOffset!.inHours);
       // NotificationService().createNotification(id:73,title:"300 title",body:"300 body",hour:22,minites:22,zoneOffset: _zone!.timeZoneOffset!.inHours);
-       print("MMMMMMMMMMMMMMMMMMMMMMMMMMMM");
 
 
 
@@ -124,9 +119,9 @@ class PrayerController extends GetxController
     // TODO: implement onInit
     super.onInit();
 
-    await initilization();
-    update();
+     initilization();
 
+     update();
     }
 
 
@@ -158,7 +153,7 @@ class PrayerController extends GetxController
 
     }
 
-
+    update();
 
   }
 

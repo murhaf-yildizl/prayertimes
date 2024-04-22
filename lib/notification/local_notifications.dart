@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:prayertimes1/main.dart';
 import 'package:prayertimes1/view/show_prayer_notifications.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:intl/intl.dart';
+
+import '../main.dart';
 
 
 class NotificationService{
@@ -18,7 +17,7 @@ class NotificationService{
   {
 
 
-    AndroidInitializationSettings initializationSettingsAndroid=AndroidInitializationSettings("notification");
+    AndroidInitializationSettings initializationSettingsAndroid=AndroidInitializationSettings("notification",);
     var initializationIOS=DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -36,46 +35,43 @@ class NotificationService{
     await _notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response){
-        print("-------==== ${response.id}");
+        print("----->>>>>>>>>>>>>>>>>>>--==== ${response.id}");
         Get.to(CurrentPrayer());
 
       },
-    );
 
+    );
 
   }
 
   cancelNotifications({int id=-1})
   {
 
-    print("%%%%%%%%%%%%%%%%%%%%%5");
-     print(_notificationsPlugin.getActiveNotifications());
-    print("%%%%%%%%%%%%%%%%%%%%%5");
+
     if(id==-1)
       _notificationsPlugin.cancelAll();
-    else  _notificationsPlugin.cancel(id);
 
-    print("ID=$id");
-    print(">>>>>>>>>> ${_notificationsPlugin.pendingNotificationRequests().then((value){value.forEach((element) { print("${element.id} ${element.title}");});})}>>>>>>>>>>>>");
+   else  _notificationsPlugin.cancel(id);
+
 
   }
 
 
   Future _notificationDetails(int id)async
   {
-    try {
-      String azan = pref.getString("azan") ?? "azan1";
+
+      String azan = pref.getString("azan") ?? "azan4";
 
       return NotificationDetails(
-
         android: AndroidNotificationDetails(
           id.toString(),
           "channel_$id",
           importance: Importance.max,
-          sound: RawResourceAndroidNotificationSound("azan2"),
+          sound:   RawResourceAndroidNotificationSound(azan),
           playSound: true,
           enableLights: true,
           priority: Priority.high,
+
 
 
         ),
@@ -83,16 +79,13 @@ class NotificationService{
 
 
       );
-    }
-    catch(e){
-      print("UUUUUUUUUUU ${e.toString()}");
-    }
+
   }
 
   Future createNotification({required int id,required String title,required String body,required int hour,required int minites,required int zoneOffset})async
   {
 
-    await this._initNotification();
+    await _initNotification();
     tzdata.initializeTimeZones();
 
     return  await _notificationsPlugin.zonedSchedule(
@@ -100,10 +93,12 @@ class NotificationService{
       title,
       body,
       payload:body,
-      await _schedual(hour, minites,zoneOffset),
-      await _notificationDetails(id).then((value) =>value),
+      await _schedual(hour, minites,zoneOffset).then((value)=>value),
+      await _notificationDetails(id).then((value)=>value),
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+
+
     );
 
 
@@ -125,6 +120,8 @@ class NotificationService{
 
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
+
+
       print("<<<<<<<<<>>>>>>>>>>>::");
     }
 
