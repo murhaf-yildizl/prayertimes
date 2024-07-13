@@ -128,9 +128,13 @@ class ShowItem extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         body: Container(
-          color:Colors.white,
-          child: Center(child: Text('القائمة قيد الإنشاء',style: TextStyle(fontFamily: 'lteef',fontSize: 24),),),
-        )
-    );
+          color: Colors.white,
+          child: Center(
+            child: Text(
+              'القائمة قيد الإنشاء',
+              style: TextStyle(fontFamily: 'lteef', fontSize: 24),
+            ),
+          ),
+        ));
   }
 }

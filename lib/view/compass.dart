@@ -19,7 +19,8 @@ class _CompassState extends State<Compass> {
   CompassEvent? _lastRead;
   DateTime? _lastReadAt;
   final _compassSvg = SvgPicture.asset('assets/SVG/compass.svg');
-  final _needleSvg = Image.asset("assets/images/qiblah.png",fit: BoxFit.contain,height: 300);
+  final _needleSvg =
+      Image.asset("assets/images/qiblah.png", fit: BoxFit.contain, height: 300);
   // SvgPicture.asset(
   //   'assets/SVG/needle.svg',
   //   fit: BoxFit.contain,
@@ -112,8 +113,6 @@ class _CompassState extends State<Compass> {
 
         double? direction = snapshot.data!.heading;
 
-
-
         // if direction is null, then device does not support this sensor
         // show error message
         if (direction == null)
@@ -146,7 +145,10 @@ class _CompassState extends State<Compass> {
 
                     Positioned(
                       bottom: 8,
-                      child: Text("${direction.toStringAsFixed(3)}°",style: TextStyle(fontSize: 20,color: Colors.red),),
+                      child: Text(
+                        "${direction.toStringAsFixed(3)}°",
+                        style: TextStyle(fontSize: 20, color: Colors.red),
+                      ),
                     )
                   ],
                 )));

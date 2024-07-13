@@ -5,35 +5,26 @@ import 'package:get/get.dart';
 import '../model/zone.dart';
 
 class ZoneController {
-   CurrentZone? zone;
+  CurrentZone? zone;
 
- Future<CurrentZone?> initiateZone()async
-  {
-
-    Position? _location=await getCurrentLocation();
-     if(_location!=null)
-    {
+  Future<CurrentZone?> initiateZone() async {
+    Position? _location = await getCurrentLocation();
+    if (_location != null) {
       List<Placemark> placemarks = await placemarkFromCoordinates(
-          _location.latitude,
-          _location.longitude
-      );
+          _location.latitude, _location.longitude);
 
-      if(placemarks.length>0)
-        {
+      if (placemarks.length > 0) {
+        final placemark = placemarks.first;
 
-
-          final placemark=placemarks.first;
-
-          final timeZoneOffset=DateTime.now().timeZoneOffset.inHours;
-          zone=CurrentZone(position: _location, placemark: placemark, timeZoneOffset: Duration(minutes:timeZoneOffset),currentTime:DateTime.now());
-
-        }
-
+        final timeZoneOffset = DateTime.now().timeZoneOffset.inHours;
+        zone = CurrentZone(
+            position: _location,
+            placemark: placemark,
+            timeZoneOffset: Duration(minutes: timeZoneOffset),
+            currentTime: DateTime.now());
+      }
     }
-     return zone;
-
-
-
+    return zone;
   }
 
   Future<Position?> getCurrentLocation() async {
@@ -42,16 +33,11 @@ class ZoneController {
 
       permission = await Geolocator.requestPermission();
 
-      return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-
+      return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
     } catch (e) {
       Get.snackbar("error", e.toString());
       print("Error: $e");
     }
-
-
-
-}
-
+  }
 }

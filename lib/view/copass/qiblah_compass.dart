@@ -12,7 +12,8 @@ class QiblahCompass extends StatefulWidget {
 }
 
 class _QiblahCompassState extends State<QiblahCompass> {
-  final _locationStreamController = StreamController<LocationStatus>.broadcast();
+  final _locationStreamController =
+      StreamController<LocationStatus>.broadcast();
 
   get stream => _locationStreamController.stream;
 
@@ -84,7 +85,6 @@ class _QiblahCompassState extends State<QiblahCompass> {
       ),
     );
   }
-
 }
 
 class QiblahCompassWidget extends StatelessWidget {
@@ -101,13 +101,11 @@ class QiblahCompassWidget extends StatelessWidget {
     return StreamBuilder(
       stream: FlutterQiblah.qiblahStream,
       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-        {
-          return   Center(child: _compassSvg);
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: _compassSvg);
         }
 
         final qiblahDirection = snapshot.data!;
-
 
         return Stack(
           alignment: Alignment.center,
@@ -123,7 +121,8 @@ class QiblahCompassWidget extends StatelessWidget {
             ),
             Positioned(
               bottom: 8,
-              child: Text("${(qiblahDirection.direction * (pi / 180) * -1).toStringAsFixed(3)}°"),
+              child: Text(
+                  "${(qiblahDirection.direction * (pi / 180) * -1).toStringAsFixed(3)}°"),
             )
           ],
         );

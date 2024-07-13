@@ -16,8 +16,8 @@ class AnimatedGridViewWidget extends StatefulWidget {
   _AnimatedGridViewWidgetState createState() => _AnimatedGridViewWidgetState();
 }
 
-
-class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget> with SingleTickerProviderStateMixin {
+class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -39,35 +39,34 @@ class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget> with Si
       body: Container(
         height: Get.height,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/mosque11.jpg"),
-            fit:BoxFit.cover
-          )
-        ),
+            image: DecorationImage(
+                image: AssetImage("assets/images/mosque11.jpg"),
+                fit: BoxFit.cover)),
         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           crossAxisAlignment: CrossAxisAlignment.center,
-           children: [
-             drawTitle(),
-             SizedBox(height: 20,),
-             Padding(
-               padding: const EdgeInsets.all(20),
-               child: GridView.builder(
-               shrinkWrap: true,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            drawTitle(),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: GridView.builder(
+                shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 18.0,
                   mainAxisSpacing: 18.0,
-
                 ),
                 itemCount: azkar.length,
                 itemBuilder: (context, index) {
-                   return drawCard(index);
+                  return drawCard(index);
                 },
-      ),
-             ),
-           ],
-         ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -79,39 +78,43 @@ class _AnimatedGridViewWidgetState extends State<AnimatedGridViewWidget> with Si
   }
 
   Widget drawCard(int index) {
-
-    return  ScaleTransition(
+    return ScaleTransition(
       scale: _animation,
       child: InkWell(
-        onTap: (){
-          Get.to(SingleAzkar(map:azkar[index]));
+        onTap: () {
+          Get.to(SingleAzkar(map: azkar[index]));
         },
         child: Container(
           height: 20,
           width: 20,
           decoration: BoxDecoration(
-            color: Colors.brown.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(30)
-          ),
+              color: Colors.brown.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(30)),
           child: Center(
-            child: Text(
-              '${azkar[index].keys.first}',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white)),
-            ),
+            child: Text('${azkar[index].keys.first}',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Colors.white)),
           ),
         ),
+      ),
     );
   }
 
- Widget drawTitle() {
+  Widget drawTitle() {
     return Container(
-      height: Get.height*0.08,
-      width:  Get.width*0.90,
+      height: Get.height * 0.08,
+      width: Get.width * 0.90,
       decoration: BoxDecoration(
-        color: Colors.indigo,
-        borderRadius: BorderRadius.circular(30)
-      ),
-      child: Center(child: Text("فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ",style:Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white))),
+          color: Colors.indigo, borderRadius: BorderRadius.circular(30)),
+      child: Center(
+          child: Text(
+              "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.white))),
     );
- }
+  }
 }
