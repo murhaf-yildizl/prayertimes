@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
 import 'package:prayertimes1/utilities/widgets/drawer.dart';
 import 'package:prayertimes1/view/compass.dart';
@@ -34,6 +35,8 @@ class _HomeState extends State<Home> implements HomeInterface {
     _pageController = PageController(initialPage: currentPage);
     initilizeItems();
 
+     _requestNotificationPermission();
+
     Workmanager().registerPeriodicTask(
       DateTime.now().toString(),
       "dailytask",
@@ -41,6 +44,44 @@ class _HomeState extends State<Home> implements HomeInterface {
       //initialDelay: Duration(hours: 6),
     );
   }
+
+  Future<void> _requestNotificationPermission() async {
+    var status = await Permission.notification.status;
+
+    if(status.isDenied) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return   AlertDialog(
+            title: Text("Enable Notifications"),
+            content: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Text(
+                    "يجب تفعيل الإشعارات لكي يعمل الأذان والتنبيه لأوقات الصلاة")),
+            actions: [
+
+              Center(
+                child: TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await openAppSettings();
+
+                  },
+
+                  child: Text("فتح الإعدادات"),
+                ),
+              )
+
+            ],
+          );
+        },
+      );
+    }
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

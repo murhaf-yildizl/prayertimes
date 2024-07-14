@@ -69,17 +69,9 @@ class PrayerController extends GetxController {
         index++;
       });
 
-      //NotificationService().cancelNotifications();
-      // NotificationService().createNotification(
-      //     id: 9890,
-      //     title: "99 title",
-      //     body: "1009 body",
-      //     hour: 15,
-      //     minites: 39,
-      //     zoneOffset: _zone!.timeZoneOffset!.inHours);
 
-      //NotificationService().createNotification(id:88,title:"88 title",body:"2007 body",hour:23,minites:  47,zoneOffset: _zone!.timeZoneOffset!.inHours);
-      // NotificationService().createNotification(id:73,title:"300 title",body:"300 body",hour:22,minites:22,zoneOffset: _zone!.timeZoneOffset!.inHours);
+      // NotificationService().createNotification(id:88,title:"88 title",body:"2007 body",hour:18,minites:  40,zoneOffset: _zone!.timeZoneOffset!.inHours);
+      // NotificationService().createNotification(id:73,title:"300 title",body:"300 body",hour:18,minites:46,zoneOffset: _zone!.timeZoneOffset!.inHours);
     }
 
     update();

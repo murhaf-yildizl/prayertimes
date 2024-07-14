@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:prayertimes1/controller/prayer_controller.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
 import 'package:prayertimes1/utilities/themes.dart';
@@ -40,21 +41,22 @@ class MyApp extends StatelessWidget {
     Get.put(PrayerController());
     Get.put(DateController());
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 3), ()async {
       runApp(GetMaterialApp(
           debugShowCheckedModeBanner: false,
           defaultTransition: Transition.leftToRightWithFade,
           title: 'Flutter Demo',
           theme: arabicTheme(),
           home: Home()));
+
     });
-    return splashScreen();
+    return   splashScreen();
   }
 
-  Widget splashScreen() {
+ Widget splashScreen()  {
     Workmanager().initialize(callbackDispatcher);
 
-    return Container(
+   return Container(
       color: Colors.white,
       child: Center(
           child: Lottie.asset(
