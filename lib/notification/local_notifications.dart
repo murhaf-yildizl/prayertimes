@@ -54,6 +54,8 @@ class NotificationService {
         playSound: true,
         enableLights: true,
         priority: Priority.high,
+        enableVibration: true,
+
       ),
       iOS: DarwinNotificationDetails(),
     );
