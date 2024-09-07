@@ -41,9 +41,7 @@ dependencies:
   flutter_local_notifications: 14.0.1
   geolocator:
   geocoding:
-  shared_preferences:
   curved_navigation_bar:
-  workmanager:
   flutter_compass:
   flutter_svg:
   permission_handler:
@@ -55,6 +53,7 @@ dependencies:
   audioplayers: ^5.2.1
   appinio_video_player: ^1.2.2
   marquee:
+  hive_flutter:
 
 dev_dependencies:
   flutter_test:
@@ -118,6 +117,9 @@ flutter:
     - assets/icons/times.png
     - assets/icons/compass.png
     - assets/icons/menu.png
+
+    #lottie icons
+    - assets/lottie/waitting.json
 
     #sunds
     - assets/sounds/azan1.mp3

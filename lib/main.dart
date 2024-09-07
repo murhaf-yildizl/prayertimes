@@ -2,33 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:prayertimes1/controller/prayer_controller.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
 import 'package:prayertimes1/utilities/themes.dart';
 import 'package:prayertimes1/view/home.dart';
-//import 'notification/awesome_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
-import 'package:connectivity/connectivity.dart';
 import 'controller/date_controller.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-late SharedPreferences pref;
+late Box<dynamic> data;
+late Box<bool>   notify;
+late Box<String> azanName;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  pref = await SharedPreferences.getInstance();
+  await Hive.initFlutter();
 
-  runApp(MyApp());
+  notify   = await Hive.openBox('notify');
+  azanName = await Hive.openBox("azan");
+  data      = await Hive.openBox("data");
+
+    runApp(MyApp());
+
 }
+
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)   {
+
+
     deviceDemensions(context);
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -41,20 +46,22 @@ class MyApp extends StatelessWidget {
     Get.put(PrayerController());
     Get.put(DateController());
 
-    Future.delayed(Duration(seconds: 3), ()async {
+      int? savedYear=data.get("year");
+
+    Future.delayed(Duration(seconds: savedYear!=null?1:6), ()   {
+
       runApp(GetMaterialApp(
           debugShowCheckedModeBanner: false,
           defaultTransition: Transition.leftToRightWithFade,
-          title: 'Flutter Demo',
+          title: '',
           theme: arabicTheme(),
           home: Home()));
 
     });
-    return   splashScreen();
+    return     splashScreen( );
   }
 
- Widget splashScreen()  {
-    Workmanager().initialize(callbackDispatcher);
+   splashScreen()    {
 
    return Container(
       color: Colors.white,
@@ -66,25 +73,4 @@ class MyApp extends StatelessWidget {
       )),
     );
   }
-}
-
-void callbackDispatcher() {
-  Workmanager().executeTask((taskName, inputData) async {
-    print("................$taskName started.................");
-
-    WidgetsFlutterBinding.ensureInitialized();
-    PrayerController().getPrayerTimes();
-
-    //}
-    return Future.value(true);
-  });
-}
-
-Future<bool> checkConnectivity() async {
-  var result = await Connectivity().checkConnectivity();
-
-  print(result.name);
-  if (result.name == "none") return false;
-
-  return true;
 }

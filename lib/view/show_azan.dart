@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
 import '../controller/prayer_controller.dart';
 import '../main.dart';
@@ -20,6 +21,7 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin {
   Duration _position = new Duration(seconds: 0);
   late double durationValue;
   bool isPlaying = false;
+  bool azanChanged=false;
   String? url;
   List<Map<String, String>> soundList = [];
   int? selectedItem;
@@ -58,7 +60,14 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin {
               color: Colors.white,
             )),
       ),
-      body: Container(
+      body: azanChanged? Center(
+        child: Lottie.asset(
+            "assets/lottie/waitting.json",
+            height:Get.height*0.50,
+            width:Get.width*0.50
+        ),
+      )
+          :Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -180,18 +189,24 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin {
                           activeColor: Colors.red,
                           groupValue: selectedAzan,
                           value: soundList[index]['path']!,
-                          onChanged: (value) {
+                          onChanged: (value) async {
                             setState(() {
                               String? azan = value?.split("/")[1].split(".")[0];
-                              print("VALU $value");
-                              if (azan != null) {
-                                pref.setString("azan", azan);
 
-                                PrayerController().initilization();
-                              }
+                               if (azan != null) {
+                                data.clear();
+                                azanName.put("azan", azan);
+                               }
 
                               selectedAzan = value;
+                              azanChanged=true;
                             });
+                           await   PrayerController().initialization().then((value){
+                             setState(() {
+                               azanChanged=false;
+
+                             });
+                           });
                           }),
                     ],
                   ),
@@ -226,7 +241,7 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin {
       },
     ];
 
-    String azan = pref.getString("azan") ?? 'azan4';
+    String azan = azanName.get("azan") ?? 'azan4';
     int index = 0;
 
     switch (azan) {
@@ -274,6 +289,7 @@ class _PlayAudioState extends State<AzanSound> with TickerProviderStateMixin {
         _position = value;
       });
     });
+
   }
 
   @override

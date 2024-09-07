@@ -1,8 +1,8 @@
-import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:prayertimes1/controller/prayer_controller.dart';
 import 'package:prayertimes1/model/prayer.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
@@ -13,11 +13,12 @@ class PrayerTime extends StatefulWidget {
   _PrayerTimeState createState() => _PrayerTimeState();
 }
 
+
 class _PrayerTimeState extends State<PrayerTime> {
   String selectedPrayerTime = 'Fajr'; // Default selected prayer time
   int currentPageIndex = 0; // Current page index
-  //int h=-1;
 
+  //int h=-1;
   PageController pageController = PageController(
     initialPage: 0,
     viewportFraction: 0.3,
@@ -26,19 +27,28 @@ class _PrayerTimeState extends State<PrayerTime> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: GetBuilder<PrayerController>(
-        builder: (controller) {
-          if (controller.prayer_times.isNotEmpty) {
-            return drawConents(controller.prayer_times);
+         builder: (controller) {
+
+          if (controller.today_prayer_times.isNotEmpty) {
+            return drawConents(controller.today_prayer_times);
           }
 
-          return const Center(child: CircularProgressIndicator());
-        },
+          return Center(
+            child: Lottie.asset(
+                "assets/lottie/waitting.json",
+                height:Get.height*0.50,
+                width:Get.width*0.50
+            ),
+          );
+          },
       ),
     );
   }
@@ -75,7 +85,7 @@ class _PrayerTimeState extends State<PrayerTime> {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'lateef',
                 fontWeight: FontWeight.bold,
@@ -89,16 +99,7 @@ class _PrayerTimeState extends State<PrayerTime> {
             ]),
       ),
     );
-    return Center(
-        child: Text(
-      "${place.country}\n${place.administrativeArea}",
-      style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'lateef',
-          color: Colors.white,
-          letterSpacing: 3),
-    ));
+
   }
 
   Widget drawTimes(List<PrayerModel> prayer_times) {
@@ -121,7 +122,6 @@ class _PrayerTimeState extends State<PrayerTime> {
   }
 
   Widget drawPages(int i, List<PrayerModel> prayer_times) {
-    ;
 
     return Directionality(
         textDirection:
@@ -218,4 +218,6 @@ class _PrayerTimeState extends State<PrayerTime> {
                 ),
               ));
   }
+
+
 }

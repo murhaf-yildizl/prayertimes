@@ -8,7 +8,6 @@ import 'package:prayertimes1/view/home_interface.dart';
 import 'package:prayertimes1/view/show_azkar.dart';
 import 'package:prayertimes1/view/show_date.dart';
 import 'package:prayertimes1/view/show_prayer_times.dart';
-import 'package:workmanager/workmanager.dart';
 import 'show_prayer_notifications.dart';
 
 class Home extends StatefulWidget {
@@ -29,63 +28,26 @@ class _HomeState extends State<Home> implements HomeInterface {
   List<String> _lables = [];
 
   @override
-  void initState() {
+  void initState()  {
     // TODO: implement initState
     super.initState();
+
     _pageController = PageController(initialPage: currentPage);
     initilizeItems();
 
-     _requestNotificationPermission();
+    Future.delayed(Duration(seconds: 1),()async{
+      await _requestNotificationPermission();
 
-    Workmanager().registerPeriodicTask(
-      DateTime.now().toString(),
-      "dailytask",
-      frequency: Duration(hours: 6),
-      //initialDelay: Duration(hours: 6),
-    );
-  }
-
-  Future<void> _requestNotificationPermission() async {
-    var status = await Permission.notification.status;
-
-    if(status.isDenied) {
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return   AlertDialog(
-            title: Text("Enable Notifications"),
-            content: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Text(
-                    "يجب تفعيل الإشعارات لكي يعمل الأذان والتنبيه لأوقات الصلاة")),
-            actions: [
-
-              Center(
-                child: TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await openAppSettings();
-
-                  },
-
-                  child: Text("فتح الإعدادات"),
-                ),
-              )
-
-            ],
-          );
-        },
-      );
-    }
-
+    });
 
   }
+
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+     return Scaffold(
       key: _key,
       endDrawer: CustomDrawer(),
       body: PageView(
@@ -124,6 +86,8 @@ class _HomeState extends State<Home> implements HomeInterface {
         items: List.generate(_screens.length + 1, (index) => getItems(index)),
       ),
     );
+
+
   }
 
   @override
@@ -191,4 +155,46 @@ class _HomeState extends State<Home> implements HomeInterface {
     return [page, iconData, bottomLable];
     throw UnimplementedError();
   }
+
+
+
+  Future<void> _requestNotificationPermission() async {
+    var status = await Permission.notification.status;
+
+    if(status.isDenied) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return   AlertDialog(
+            title: const Text("Enable Notifications"),
+            content: const Directionality(
+                textDirection: TextDirection.rtl,
+                child: Text(
+                    "يجب تفعيل الإشعارات لكي يعمل الأذان والتنبيه لأوقات الصلاة")),
+            actions: [
+
+              Center(
+                child: TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await openAppSettings().then((value){
+
+                    });
+
+                  },
+
+                  child: Text("فتح الإعدادات"),
+                ),
+              )
+
+            ],
+          );
+        },
+      );
+    }
+
+
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:prayertimes1/controller/prayer_controller.dart';
 import 'package:prayertimes1/model/prayer.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
@@ -27,6 +28,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>
   late AnimationController _controller;
   late AnimationController _rowController;
   late Animation<double> _animation;
+  bool finish=true;
 
   @override
   void initState() {
@@ -54,8 +56,8 @@ class _CurrentPrayerState extends State<CurrentPrayer>
     _controller.dispose();
     _rowController.dispose();
     timer.cancel();
-
     super.dispose();
+
   }
 
   @override
@@ -68,12 +70,22 @@ class _CurrentPrayerState extends State<CurrentPrayer>
       body: GetBuilder<PrayerController>(
         init: PrayerController(),
         builder: (prayerController) {
-          if (prayerController.prayer_times.isNotEmpty) {
-            getRemainingTime(prayerController.prayer_times);
+
+       if (!finish) {
+         return   Center(
+           child: Lottie.asset(
+                   "assets/lottie/waitting.json",
+                   height:Get.height*0.50,
+                   width:Get.width*0.50
+               ),
+         );
+       }
+       if (prayerController.today_prayer_times.isNotEmpty) {
+            getRemainingTime(prayerController.today_prayer_times);
 
             return timerFinished && stoped == false
                 ? showCurrentTime()
-                : drawTimes(prayerController.prayer_times);
+                : drawTimes(prayerController.today_prayer_times);
           }
           return Text('');
         },
@@ -105,7 +117,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>
                       //  color: Colors.blueAccent,
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 60,
                           ),
                           Container(
@@ -131,12 +143,12 @@ class _CurrentPrayerState extends State<CurrentPrayer>
                                 });
                                 Get.to(Home());
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.stop_circle_outlined,
                                 size: 50,
                                 color: Colors.red,
                               )),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                         ],
@@ -145,9 +157,10 @@ class _CurrentPrayerState extends State<CurrentPrayer>
   }
 
   Widget drawRow(PrayerModel prayer, int index) {
-    bool notified = pref.getBool("${prayer.name!}_notify") ?? false;
+    bool notified = notify.get("${prayer.name!}_notify") ?? false;
+    NotificationService notificationService=NotificationService();
 
-    if (notified == true)
+     if (notified == true)
       notif_iconColor[index] = true;
     else
       notif_iconColor[index] = false;
@@ -168,30 +181,41 @@ class _CurrentPrayerState extends State<CurrentPrayer>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
+               Container(
                 width: screen_width * 0.20,
                 child: Center(
                   child: IconButton(
-                    onPressed: () {
+                    onPressed: ()async {
                       if (index == 1) return;
 
-                      setState(() {
-                        if (notified == false) {
-                          notif_iconColor[index] = true;
-                          pref.setBool("${prayer.name!}_notify", true);
-                          NotificationService().createNotification(
-                              id: index,
-                              title: "تنبيه االصلاة",
-                              body: "${prayer.name} صلاة",
-                              hour: prayer.time!.hour,
-                              minites: prayer.time!.minute,
-                              zoneOffset: prayer.zone!.timeZoneOffset!.inHours);
-                        } else {
-                          notif_iconColor[index] = false;
-                          pref.setBool("${prayer.name!}_notify", false);
-                          NotificationService().cancelNotifications(id: index);
+                      await notificationService.initNotification();
+
+                       setState(() {
+                          finish=false;
+                        });
+
+                      if (notified == false) {
+                         notify.put("${prayer.name!}_notify", true);
+                        await notificationService.reactiveNotifyByName(prayer.name!, index).then((value) {
+                                 setState(() {
+                                    notif_iconColor[index] = true;
+                                    finish=true;
+
+                                      });
+                                  });
+
                         }
-                      });
+
+                      else if(notified==true){
+                        notify.put("${prayer.name!}_notify", false);
+                        await notificationService.deactiveNotifyByName(prayer.name!).then((value) {
+                          setState(() {
+                                notif_iconColor[index] = false;
+                                finish=true;
+                               });
+                        });
+                         }
+
                     },
                     icon: Icon(
                       Icons.add_alert,
@@ -316,6 +340,7 @@ class _CurrentPrayerState extends State<CurrentPrayer>
     remainingSeconds = remainingTime['remainingsecond'];
   }
 
+  String txt="";
   drawTimes(List<PrayerModel> prayer_times) {
     return Container(
         height: Get.height,
@@ -336,7 +361,8 @@ class _CurrentPrayerState extends State<CurrentPrayer>
                       : drawRow(prayer_times[i - 1], i - 1),
                 SizedBox(
                   height: screen_height * 0.10,
-                )
+                ),
+                Container(color:Colors.white,child: Text(txt)),
               ]),
         ));
   }
@@ -345,16 +371,17 @@ class _CurrentPrayerState extends State<CurrentPrayer>
     if (remainingSeconds > 0) remainingSeconds--;
 
     if (remainingSeconds == 0 && remainingMinutes == 0 && remainingHours == 0) {
-      setState(() {
-        Future.delayed(Duration(minutes: 1), () {
-          setState(() {
-            timerFinished = false;
-            stoped = true;
-            timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-              startCounter(t);
-            });
+      Future.delayed(Duration(minutes: 1), () {
+        setState(() {
+          timerFinished = false;
+          stoped = true;
+          timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+            startCounter(t);
           });
         });
+      });
+
+      setState(() {
         timer.cancel();
         timerFinished = true;
       });

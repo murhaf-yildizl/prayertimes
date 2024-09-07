@@ -3,7 +3,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:marquee/marquee.dart';
 import 'package:prayertimes1/utilities/device_dimensions.dart';
-import '../main.dart';
 
 class QuraanSound extends StatefulWidget {
   QuraanSound({key}) : super(key: key);
