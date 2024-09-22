@@ -186,13 +186,13 @@ class _CurrentPrayerState extends State<CurrentPrayer>
                 child: Center(
                   child: IconButton(
                     onPressed: ()async {
-                      if (index == 1) return;
+                      if (index == 1 || !finish) return;
+
+                      setState(() {
+                        finish=false;
+                      });
 
                       await notificationService.initNotification();
-
-                       setState(() {
-                          finish=false;
-                        });
 
                       if (notified == false) {
                          notify.put("${prayer.name!}_notify", true);

@@ -27,9 +27,11 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.murhaf.prayertimes1"
-    compileSdkVersion 34
+    //compileSdkVersion 34
+    defaultConfig {
+        compileSdk 34
+    }
     ndkVersion "25.1.8937393"
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -50,8 +52,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 13
+        versionName "1.0.13"
     }
 
     buildTypes {
@@ -61,6 +63,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    compileSdk 34
 }
 
 flutter {
